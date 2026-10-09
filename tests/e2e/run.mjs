@@ -246,6 +246,8 @@ async function playIn(browser, name, lang) {
         window.__goatrun.step(0);
       }, [kind, record]);
       await checkTexts(`game over, hit by a ${kind}${record ? ', a new best' : ''}`);
+      // The tall ones are drawn smaller, under the texts: kept for a look.
+      if (!record && (kind === 'boulder' || kind === 'pine')) await shot(`10-over-${kind}`);
     }
   }
   check(t('Escape on the game over is prevented and goes to the title'), (await back()) === true && (await state()).screen === 'title');

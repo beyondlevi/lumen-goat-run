@@ -848,6 +848,8 @@ function pauseScreen(ctx: CanvasRenderingContext2D, game: Game, s: Strings, num:
 
 /** Where the obstacle that got the goat stands in the crash view (tall ones nearer, so they stay below the texts). */
 const CRASH_DEPTH: Record<Kind, number> = {branch: 1.2, rock: 1.5, fence: 1.5, boulder: 1.35, pine: 1.05};
+/** The crash scene's highest point (the obstacle's top, under its sparks): clear of the texts above. */
+const CRASH_SCENE_TOP = 438;
 
 function overScreen(ctx: CanvasRenderingContext2D, game: Game, s: Strings, num: (n: number) => string, clock: number): void {
   const crash = game.crash ?? {kind: 'rock' as Kind, zone: game.zone};
@@ -861,8 +863,15 @@ function overScreen(ctx: CanvasRenderingContext2D, game: Game, s: Strings, num: 
   const cx = v.x(1, 1);
   const d = CRASH_DEPTH[crash.kind];
   const art = obstacleArt(crash.kind, zone === 'snow');
-  obstacle(ctx, v, crash.kind, zone === 'snow', 1, d);
   const top = v.y(d) + art.box[1] * v.s(d);
+  // A tall obstacle (a boulder, a pine) reached up into the hint line: the scene shrinks toward
+  // the bottom edge until it stays under the texts.
+  const fit = top >= CRASH_SCENE_TOP ? 1 : (SIZE - CRASH_SCENE_TOP) / (SIZE - top);
+  ctx.save();
+  ctx.translate(cx, SIZE);
+  ctx.scale(fit, fit);
+  ctx.translate(-cx, -SIZE);
+  obstacle(ctx, v, crash.kind, zone === 'snow', 1, d);
   strokePath(ctx, `M${cx - 26} ${top - 12} l-10 -8 M${cx} ${top - 16} l0 -10 M${cx + 26} ${top - 12} l10 -8`, P.danger, 2.6);
   ctx.save();
   ctx.beginPath();
@@ -885,6 +894,7 @@ function overScreen(ctx: CanvasRenderingContext2D, game: Game, s: Strings, num: 
     ctx.closePath();
     ctx.fill();
   }
+  ctx.restore();
 
   text(ctx, s.crash, 300, 62, {size: 40, title: true, color: P.text, align: 'center'});
   const hit = s.hits[crash.kind];
