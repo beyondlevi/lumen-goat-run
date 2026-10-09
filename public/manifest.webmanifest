@@ -1,0 +1,18 @@
+{
+  "id": "cloud.bynd.lumen.goatrun",
+  "name": "Goat Run",
+  "short_name": "Goat Run",
+  "version": "0.1.0",
+  "description": "An endless three-lane runner: swipe left or right to change lanes, up to jump, down to slide. Three zones, each faster than the last.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any monochrome"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any monochrome"}
+  ]
+}
